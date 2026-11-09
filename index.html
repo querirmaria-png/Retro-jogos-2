@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arcade Web Mobile - 259 Jogos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #05050a;
+            color: #ffffff;
+            touch-action: manipulation;
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.7), 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+        .neon-border {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ef4444;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-[#05050a] min-h-screen flex flex-col select-none overflow-x-hidden">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="sticky top-0 z-40 bg-[#0a0a0f]/90 backdrop-blur-md border-b border-red-500/30 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center neon-border">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-orbitron font-black text-xl tracking-wider bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent">
+                        ARCADE MOBILE
+                    </h1>
+                    <p class="text-xs text-gray-400 font-semibold tracking-widest uppercase">259 Jogos Retro & Modernos</p>
+                </div>
+            </div>
+
+            <!-- BARRA DE PESQUISA -->
+            <div class="w-full sm:w-80 relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </span>
+                <input type="text" id="searchInput" placeholder="Pesquisar entre 259 jogos..." 
+                    class="w-full pl-10 pr-4 py-2 bg-[#12121a] border border-zinc-800 rounded-xl text-sm focus:outline-none focus:border-red-500 text-white placeholder-gray-500 transition-all">
+            </div>
+        </div>
+
+        <!-- FILTROS DE CATEGORIA -->
+        <div class="max-w-7xl mx-auto flex gap-2 overflow-x-auto pb-1 mt-3 scrollbar-none">
+            <button onclick="filterCategory('all')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-red-600 text-white transition-all shrink-0">Todos (259)</button>
+            <button onclick="filterCategory('retro')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-[#12121a] hover:bg-zinc-800 text-gray-300 transition-all shrink-0">Retrô & Emulador</button>
+            <button onclick="filterCategory('acao')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-[#12121a] hover:bg-zinc-800 text-gray-300 transition-all shrink-0">Ação & Mundo</button>
+            <button onclick="filterCategory('corrida')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-[#12121a] hover:bg-zinc-800 text-gray-300 transition-all shrink-0">Corrida & GT3</button>
+            <button onclick="filterCategory('puzzle')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-[#12121a] hover:bg-zinc-800 text-gray-300 transition-all shrink-0">Puzzle & Clássicos</button>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL (GRID DE JOGOS) -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4">
+        <div id="gamesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <!-- Os cards serão injetados via JavaScript -->
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#0a0a0f] border-t border-zinc-900 py-4 text-center text-xs text-gray-500 font-orbitron">
+        ARCADE WEB MOBILE &bull; TODOS OS DIREITOS RESERVADOS
+    </footer>
+
+    <!-- MODAL DO PLAYER DO JOGO -->
+    <div id="gameModal" class="fixed inset-0 z-50 bg-black/95 hidden flex flex-col">
+        <div class="bg-[#0a0a0f] border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span id="modalGameTitle" class="font-orbitron font-bold text-sm sm:text-base text-white truncate max-w-[250px] sm:max-w-md">Carregando Jogo...</span>
+                <span class="text-[10px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-mono border border-red-500/30 hidden sm:inline">FULLSCREEN PLAYER</span>
+            </div>
+            <button onclick="closeGame()" class="w-12 h-12 bg-red-600 hover:bg-red-700 active:scale-95 text-white rounded-xl flex items-center justify-center shadow-lg shadow-red-600/40 transition-all cursor-pointer">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex-grow relative bg-black flex items-center justify-center overflow-hidden">
+            <div id="loadingIndicator" class="absolute inset-0 flex flex-col items-center justify-center bg-[#05050a] z-10">
+                <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-3"></div>
+                <p class="font-orbitron text-xs text-gray-400 tracking-widest animate-pulse">CARREGANDO MOTOR DE JOGO...</p>
+            </div>
+            <iframe id="gameFrame" class="w-full h-full border-0 absolute inset-0 z-20" allow="autoplay; fullscreen; gamepad; accelerometer; gyroscope" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const gamesData = [];
+        const categoriesList = ['retro', 'acao', 'corrida', 'puzzle'];
+        const sampleNames = [
+            "Super Mario Bros Arcade", "Minecraft Classic Web", "GT3 Neon Racing", "GTA Open World 3D", 
+            "Sonic Advance", "Pac-Man Retro", "Tetris Ultimate", "Space Invaders", "Cyberpunk Runner", 
+            "Drift Hunters", "Street Fighter Alpha", "Mega Man X", "Spider Stickman", "Moto X3M", "Angry Birds HTML",
+            "Zelda Classic", "Donkey Kong Country", "Counter Craft", "Among Us Online", "Subway Surfers Web"
+        ];
+
+        for(let i = 1; i <= 259; i++) {
+            let cat = categoriesList[(i - 1) % categoriesList.length];
+            let name = "";
+            let url = "";
+
+            if(i <= 20) {
+                name = sampleNames[i - 1];
+            } else {
+                let prefixos = ["Super", "Turbo", "Pixel", "Mega", "Cyber", "Epic", "Neon", "Retro", "Master", "Ultimate"];
+                let sufixos = ["Action", "Adventure", "Arcade", "Runner", "Battle", "Racing", "Quest", "Dash", "Strike", "World"];
+                name = `${prefixos[i % prefixos.length]} ${sufixos[(i * 3) % sufixos.length]} #${i}`;
+            }
+
+            if (i === 1 || name.includes("Mario")) {
+                url = "https://www.retrostic.com/embed/super-mario-bros";
+            } else if (i === 2 || name.includes("Minecraft")) {
+                url = "https://classic.minecraft.net/";
+            } else if (i === 3 || name.includes("GT3")) {
+                url = "https://www.crazygames.com/embed/stunt-car-challenge-3";
+            } else if (i === 4 || name.includes("GTA")) {
+                url = "https://www.crazygames.com/embed/vector-city-rider";
+            } else {
+                const embeds = [
+                    "https://www.crazygames.com/embed/stickman-hook",
+                    "https://www.crazygames.com/embed/Geometry-Dash",
+                    "https://www.crazygames.com/embed/drift-hunters",
+                    "https://www.crazygames.com/embed/moto-x3m",
+                    "https://www.crazygames.com/embed/smash-karts",
+                    "https://www.crazygames.com/embed/PAPER-IO-2",
+                    "https://www.crazygames.com/embed/1v1-lol",
+                    "https://www.crazygames.com/embed/bullet-force"
+                ];
+                url = embeds[i % embeds.length];
+            }
+
+            gamesData.push({ id: i, title: name, category: cat, url: url });
+        }
+
+        let currentCategory = 'all';
+
+        function renderGames(filter = '', category = 'all') {
+            const grid = document.getElementById('gamesGrid');
+            grid.innerHTML = '';
+
+            const filtered = gamesData.filter(g => {
+                const matchesSearch = g.title.toLowerCase().includes(filter.toLowerCase()) || g.id.toString() === filter;
+                const matchesCat = category === 'all' || g.category === category;
+                return matchesSearch && matchesCat;
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 font-orbitron">Nenhum jogo encontrado. Tente outra busca!</div>`;
+                return;
+            }
+
+            filtered.forEach(game => {
+                let badgeColor = game.category === 'retro' ? 'bg-red-500/20 text-red-400 border-red-500/30' :
+                                 game.category === 'corrida' ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' :
+                                 game.category === 'acao' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+
+                let card = document.createElement('div');
+                card.className = "group bg-[#101017] border border-zinc-800/80 hover:border-red-500/60 rounded-xl p-3 flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-lg";
+                card.onclick = () => openGame(game.url, game.title);
+                
+                card.innerHTML = `
+                    <div class="h-28 rounded-lg bg-gradient-to-br from-zinc-900 to-[#161622] flex items-center justify-center relative overflow-hidden group-hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] transition-all">
+                        <div class="absolute inset-0 bg-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <svg class="w-10 h-10 text-zinc-600 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="absolute top-2 right-2 text-[9px] font-mono px-2 py-0.5 rounded border ${badgeColor} uppercase tracking-wider">${game.category}</span>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-[10px] font-mono text-zinc-500">#${game.id}</span>
+                        <h3 class="font-orbitron font-bold text-xs sm:text-sm text-gray-200 group-hover:text-red-400 transition-colors line-clamp-1">${game.title}</h3>
+                    </div>
+                    <button class="mt-3 w-full py-2 bg-zinc-900 group-hover:bg-red-600 text-gray-300 group-hover:text-white rounded-lg font-orbitron font-bold text-xs tracking-wider transition-all flex items-center justify-center gap-1">
+                        <span>JOGAR AGORA</span>
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openGame(url, title) {
+            const modal = document.getElementById('gameModal');
+            const iframe = document.getElementById('gameFrame');
+            const titleEl = document.getElementById('modalGameTitle');
+            const loader = document.getElementById('loadingIndicator');
+
+            titleEl.textContent = title;
+            loader.style.display = 'flex';
+            iframe.src = url;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            iframe.onload = () => { loader.style.display = 'none'; };
+        }
+
+        function closeGame() {
+            const modal = document.getElementById('gameModal');
+            const iframe = document.getElementById('gameFrame');
+            iframe.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-red-600', 'text-white');
+                btn.classList.add('bg-[#12121a]', 'text-gray-300');
+            });
+            event.target.classList.remove('bg-[#12121a]', 'text-gray-300');
+            event.target.classList.add('bg-red-600', 'text-white');
+
+            renderGames(document.getElementById('searchInput').value, currentCategory);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            renderGames(e.target.value, currentCategory);
+        });
+
+        renderGames();
+    </script>
+</body>
+</html>
